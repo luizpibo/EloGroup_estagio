@@ -1,40 +1,25 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import styled from "styled-components";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import Cadastro from "./pages/Cadastro";
 import Dashboard from "./pages/Dashboard";
+import PageNotFound from "./pages/PageNotFound";
 
-import Container from "./components/Container";
-
-const Header = styled.header`
-  margin-bottom: 2rem;
-  text-align: center;
-`;
-const Logo = styled.img`
-  border-radius: 0.5rem;
-  box-shadow: 2px 1px 1rem #333;
-  height: 5em;
-  max-width: 24rem;
-`;
+import Container from "./components/UI/Container";
+import Header from "./components/Header";
 
 function App() {
   return (
     <Router>
       <Container>
-        <Header>
-          <Logo src="logo_elo.jpg" />
-        </Header>
-
+        <Header />
         <Switch>
-          <Route path="/">
-            <Cadastro />
-          </Route>
-          <Route path="/dashboard">
+          <Route exact path="/">
             <Dashboard />
           </Route>
+          <Route>
+            <PageNotFound />
+          </Route>
         </Switch>
-        
       </Container>
     </Router>
   );

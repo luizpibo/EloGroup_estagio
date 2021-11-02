@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "usuario": "luizpibo",
+      "senha": "12345678Luiz!"
+    },
+    {
+      "usuario": "bruna",
+      "senha": "12345678Bruna!"
+    }
+  ],
+  "leads": [
+    {
+      "nome": "Org. Internacionais",
+      "telefone": "619999999999",
+      "email": "orgInternacionais@org.com",
+      "rpa": true,
+      "produtosDigitais": true,
+      "analytics": true,
+      "bpm": true,
+      "status": "cliente_em_potencial"
+    },
+    {
+      "nome": "Ind. Farm. LTDA",
+      "telefone": "619999999999",
+      "email": "orgInternacionais@org.com",
+      "rpa": true,
+      "produtosDigitais": true,
+      "analytics": true,
+      "bpm": true,
+      "status": "dados_confirmados"
+    },
+    {
+      "nome": "Music. Sound Live Camp",
+      "telefone": "619999999999",
+      "email": "orgInternacionais@org.com",
+      "rpa": true,
+      "produtosDigitais": true,
+      "analytics": true,
+      "bpm": true,
+      "status": "reunião_agendada"
+    }
+  ]
+}
