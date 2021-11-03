@@ -4,5 +4,16 @@ import { createContext } from "react";
 export default createContext({
     leads: [],
     users: [],
-    moveLead: () => {},
+    moveLead: (lead) => {
+        switch (lead.status) {
+            case "cliente_em_potencial":
+                lead.status = "dados_confirmados";
+                break;
+            case "dados_confirmados":
+                lead.status = "reuniao_agendada";
+                break;
+            default:
+                return;
+        }
+    },
 });

@@ -125,7 +125,7 @@ const Dashboard = () => {
           </Button>
         </Buttons>
         <LeadsList />
-        {leads.length === 1 && <h2>Nenhuma lead cadastrada</h2>}
+        {leads.length === 0 && <h2>Nenhuma lead cadastrada</h2>}
       </Wrapper>
     </Context.Provider>
   );

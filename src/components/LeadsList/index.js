@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 
 import Context from "../../pages/Dashboard/context";
 
-import { Container, Header, LeadItem, LeadList, Item,ItemDraggable } from "./styles";
+import { Container, Header, LeadList, Item } from "./styles";
+import Lead from './Lead'
 
 const ListaLeads = () => {
   const status = [
@@ -12,7 +13,6 @@ const ListaLeads = () => {
   ];
 
   var { leads, moveLead } = useContext(Context);
-  console.log(leads);
   return (
     <Container>
       <Header>
@@ -20,38 +20,15 @@ const ListaLeads = () => {
           return <Item key={item}>{item}</Item>;
         })}
       </Header>
-      <LeadList>
-        {leads.map((lead, index) => {
-          switch (lead.status) {
-            case "cliente_em_potencial":
+        <LeadList>
+          {
+            leads.map((lead, index) => {
               return (
-                <LeadItem key={lead.nome}>
-                  <ItemDraggable key={lead.nome+" cliente em potencial"} draggable >{lead.nome}</ItemDraggable>
-                  <Item key={lead.nome+" dados confirmados"}>{}</Item>
-                  <Item key={lead.nome+" reuniao agendada"}>{}</Item>
-                </LeadItem>
-              );
-            case "dados_confirmados":
-              return (
-                <LeadItem key={lead.nome}>
-                  <Item key={lead.nome+" cliente em potencial"}>{}</Item>
-                  <Item key={lead.nome+" dados confirmados"}>{lead.nome}</Item>
-                  <Item key={lead.nome+" reuniao agendada"}>{}</Item>
-                </LeadItem>
-              );
-            case "reunião_agendada":
-              return (
-                <LeadItem key={lead.nome}>
-                  <Item key={lead.nome+" cliente em potencial"}>{}</Item>
-                  <Item key={lead.nome+" dados confirmados"}>{}</Item>
-                  <Item key={lead.nome+" reuniao agendada"}>{lead.nome}</Item>
-                </LeadItem>
-              );
-            default:
-              return;
+                <Lead key={lead+index} lead={lead}/>
+              )
+            })
           }
-        })}
-      </LeadList>
+        </LeadList>
     </Container>
   );
 };

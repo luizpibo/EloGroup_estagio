@@ -16,6 +16,7 @@ export const Item = styled.li`
 `;
 
 export const UlBase = styled.ul`
+
   background: #202020;
   display: flex;
   flex-direction: row;
@@ -32,7 +33,9 @@ export const LeadList = styled(UlBase)`
   flex-direction: column;
   justify-content: flex-start;
   list-style: none;
-  margin: auto;
+  border: 1rem solid #202020;
+  padding: 0.2rem;
+  background: #303030;
 `;
 
 export const LeadItem = styled(UlBase)`
