@@ -1,9 +1,9 @@
 import React from "react";
 
 import Input from "../UI/Input";
-import { Form, LabelErro, Main} from "./styles"
+import { Form, LabelErro, Main, ButtonCadastroUser} from "./styles"
 
-const Cadastro = () => {
+const CadastroUser = ({addUser, toggleModalUser}) => {
   //States--------------------------------------------------------------------------------------------------
   const [inputUsuario, setInputUsuario] = React.useState("");
   const [senha, setSenha] = React.useState("");
@@ -13,7 +13,6 @@ const Cadastro = () => {
     password: false,
     confirmedPassword: false,
   });
-  const [user, setUser] = React.useState({ nome: inputUsuario, senha: senha });
 
   //Funções-------------------------------------------------------------------------------------------------
 
@@ -53,12 +52,9 @@ const Cadastro = () => {
     //Verifica se a senha contém no mínimo 1 número
     if (password.search(/[0-9]/) < 0) errosPassword.push("numero");
     //Verifica se a senha contém no mínimo 1 caractere especial
-    if (password.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/) < 0)
+    if (password.search(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/) < 0)
       errosPassword.push("char especial");
 
-    //Console log para teste
-    console.log(password);
-    console.log("senha necessita de - " + errosPassword);
 
     //Se houver erros, retorna o array false ou o array...
     if (errosPassword.length > 0) {
@@ -104,9 +100,11 @@ const Cadastro = () => {
     } else {
       errosValid = { ...errosValid, password: false };
       var dados = {};
-      dados.nome = user;
+      dados.usuario = inputUsuario;
       dados.senha = senha;
-      setUser(dados);
+      addUser(dados);
+      window.alert("Usuário cadastrado com sucesso!");
+      toggleModalUser();
     }
     setErros(errosValid);
   }
@@ -150,10 +148,10 @@ const Cadastro = () => {
           placeholder="Confirme a senha"
           required
         />
-        <button>Registrar</button>
+        <ButtonCadastroUser>Registrar</ButtonCadastroUser>
       </Form>
     </Main>
   );
 };
 
-export default Cadastro;
+export default CadastroUser;

@@ -5,7 +5,7 @@ const Modal = ({ children, isOpen, onClose }) => {
   return (
     <Container isOpen={isOpen}>
       <Content>
-        <CloseButton onClick={onClose}>X</CloseButton>
+      <CloseButton onClick={onClose}>X</CloseButton>
         {children}
       </Content>
     </Container>

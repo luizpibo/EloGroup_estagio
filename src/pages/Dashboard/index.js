@@ -1,152 +1,133 @@
-import React from "react";
+import { useEffect, useState, React } from "react";
+
+import Context from "./context";
+import {
+  saveLeadToLocalStorage,
+  saveUserToLocalStorage,
+  loadLeadFromLocalStorage,
+  loadUserFromLocalStorage,
+} from "../../services/localStorage";
 
 import Button from "../../components/UI/Button";
-import Cadastro from "../../components/CadastroUser";
 import CadastroLead from "../../components/CadastroLead";
+import CadastroUser from "../../components/CadastroUser";
+import LeadsList from "../../components/LeadsList";
 import Modal from "../../components/Modal";
+import { Wrapper, Buttons } from "./styles";
 
-import { Wrapper, Buttons, LeadTable } from "./styles";
 
-const Data = {
-  users: [
-    {
-      usuario: "luizpibo",
-      senha: "12345678Luiz!",
-    },
-    {
-      usuario: "bruna",
-      senha: "12345678Bruna!",
-    },
-  ],
-  leads: [
-    {
-      nome: "Org. Internacionais",
-      telefone: "619999999999",
-      email: "orgInternacionais@org.com",
-      rpa: true,
-      produtosDigitais: true,
-      analytics: true,
-      bpm: true,
-      status: "cliente_em_potencial",
-    },
-    {
-      nome: "Ind. Farm. LTDA",
-      telefone: "619999999999",
-      email: "orgInternacionais@org.com",
-      rpa: true,
-      produtosDigitais: true,
-      analytics: true,
-      bpm: true,
-      status: "dados_confirmados",
-    },
-    {
-      nome: "Music. Sound Live Camp",
-      telefone: "619999999999",
-      email: "orgInternacionais@org.com",
-      rpa: true,
-      produtosDigitais: true,
-      analytics: true,
-      bpm: true,
-      status: "reunião_agendada",
-    },
-  ],
-};
 
 const Dashboard = () => {
-  const [showModal, setShowModal] = React.useState(false);
-  const [modalUser, setModalUser] = React.useState(false);
-  const [modalLead, setModalLead] = React.useState(false);
+  //Estado dos modais
+  const [showModal, setShowModal] = useState(false);
+  const [modalUser, setModalUser] = useState(false);
+  const [modalLead, setModalLead] = useState(false);
+  
+  //Estado dos leads e usuários
+  const [leads, setLeads] = useState([]);
+  const [users, setUsers] = useState([]);
 
+  //Carregando valores do local storage
+  useEffect(() => {
+    const users = loadUserFromLocalStorage();
+    const leads = loadLeadFromLocalStorage();
+    if (users) {
+      setUsers(users);
+    }
+    if (leads) {
+      setLeads(leads);
+    }
+  }, []);
+
+  //Abre/fecha modal de cadastro de lead
   const toggleModalLead = () => {
     setModalLead(!modalLead);
+    setShowModal(!showModal);
   };
 
+  //Abre/fecha modal de cadastro de usuário
   const toggleModalUser = () => {
     setModalUser(!modalUser);
+    setShowModal(!showModal);
   };
 
-  const openModal = () => {
-    setShowModal(true);
-  };
-
+  //fecha modal
   const closeModal = () => {
     setShowModal(false);
     setModalUser(false);
     setModalLead(false);
   };
-  const [Leads, setLeads] = React.useState(Data.leads);
+
+  //adiciona lead
+  const addLead = (lead) => {
+    //Adicionando status de lead
+    lead.status = "cliente_em_potencial";
+
+    //array de leads
+    var Arrayleads = leads;
+
+    //adicionando lead
+    Arrayleads.push(lead);
+
+    setLeads(leads);
+    saveLeadToLocalStorage(leads);
+    console.log(leads);
+  };
+
+  //adiciona usuário
+  const addUser = (user) => {
+    //array de usuários
+    var arrayUsers = users;
+
+    //adicionando usuário
+    arrayUsers.push(user);
+
+    setUsers(users);
+    saveUserToLocalStorage(users);
+    console.log(users);
+  };
+
+  //Move lead
+  const moveLead = (lead, status) => {
+
+  };
   return (
-    <Wrapper>
-      <Modal isOpen={showModal} onClose={closeModal}>
-        {modalLead && <CadastroLead />}
-        {modalUser && <Cadastro />}
-      </Modal>
-      <Buttons>
-        <Button
-          onClick={(e) => {
-            toggleModalLead();
-            openModal();
-          }}
-        >
-          Novo Lead
-        </Button>
-        <Button
-          onClick={(e) => {
-            toggleModalUser();
-            openModal();
-          }}
-        >
-          Novo Usuário
-        </Button>
-      </Buttons>
-      <LeadTable>
-        <thead>
-          <tr>
-            <th>Cliente em Potencial</th>
-            <th>Dados Confirmados</th>
-            <th>Reunião Agendada</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Leads.map((lead) => {
-            switch (lead.status) {
-              case "cliente_em_potencial":
-                return (
-                  <tr key={lead.nome}>
-                    <td className="draggable" draggable>
-                      {lead.nome}
-                    </td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                );
-                break;
-              case "dados_confirmados":
-                return (
-                  <tr key={lead.nome}>
-                    <td></td>
-                    <td className="draggable" draggable>
-                      {lead.nome}
-                    </td>
-                    <td></td>
-                  </tr>
-                );
-                break;
-              case "reunião_agendada":
-                return (
-                  <tr key={lead.nome}>
-                    <td></td>
-                    <td></td>
-                    <td className="draggable" draggable>
-                      {lead.nome}
-                    </td>
-                  </tr>
-                );
-            }
-          })}
-        </tbody>
-      </LeadTable>
-    </Wrapper>
+    <Context.Provider value={{leads,users,moveLead}}>
+      <Wrapper>
+        <Modal isOpen={showModal} onClose={closeModal}>
+          {modalLead && (
+            <CadastroLead
+              addLead={addLead.bind(this)}
+              toggleModalLead={toggleModalLead.bind(this)}
+            />
+          )}
+          {modalUser && (
+            <CadastroUser
+              addUser={addUser.bind(this)}
+              toggleModalUser={toggleModalUser.bind(this)}
+            />
+          )}
+        </Modal>
+        <Buttons>
+          <Button
+            onClick={(e) => {
+              toggleModalLead();
+            }}
+          >
+            Novo Lead
+          </Button>
+          <Button
+            onClick={(e) => {
+              toggleModalUser();
+            }}
+          >
+            Novo Usuário
+          </Button>
+        </Buttons>
+        <LeadsList />
+        {leads.length === 1 && <h2>Nenhuma lead cadastrada</h2>}
+      </Wrapper>
+    </Context.Provider>
   );
 };
 

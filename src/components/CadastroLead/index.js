@@ -1,8 +1,14 @@
 import React from "react";
-import { Container, Content, Wrapper, InputLead, CheckboxTable, ButtonLead } from "./styles";
+import {
+  Container,
+  Content,
+  Wrapper,
+  InputLead,
+  CheckboxTable,
+  ButtonLead,
+} from "./styles";
 
-
-const CadastroLead = (addLead) => {
+const CadastroLead = ({ addLead, toggleModalLead }) => {
   //Objeto que será enviado para o backend
   const [lead, setLead] = React.useState({
     nome: "",
@@ -55,11 +61,17 @@ const CadastroLead = (addLead) => {
         break;
     }
     setLead(newLead);
-  };
-  
+  }
+
   //Salvando nova Lead
-  function saveLead(){
-    console.log(lead);
+  function saveLead() {
+    if (lead.nome === "" || lead.telefone === "" || lead.email === "") {
+      alert("Preencha todos os campos!");
+    } else {
+      addLead(lead);
+      window.alert("Lead cadastrada com sucesso!");
+      toggleModalLead();
+    }
   }
 
   return (
@@ -79,7 +91,7 @@ const CadastroLead = (addLead) => {
           <label>Telefone*</label>
           <InputLead
             name="telefone"
-            type="text"
+            type="number"
             onChange={handleValueChange}
             placeholder="Digite o telefone da Lead "
             value={lead.telefone}
@@ -132,7 +144,7 @@ const CadastroLead = (addLead) => {
                   />
                 </td>
                 <td>Produtos Digitais</td>
-              </tr>{" "}
+              </tr>
               <tr>
                 <td>
                   <input
@@ -143,7 +155,7 @@ const CadastroLead = (addLead) => {
                   />
                 </td>
                 <td>Analytics</td>
-              </tr>{" "}
+              </tr>
               <tr>
                 <td>
                   <input
