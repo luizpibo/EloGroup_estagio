@@ -21,10 +21,10 @@ export const CloseButton = styled.button`
   display: inline;
   font-size: 1.5rem;
   height: 3rem;
-  right: 1rem;
   padding-right: 1rem;
-  text-align: end;
-  width: 100%;
+  margin-left: 1rem;
+  text-align: center;
+  width: 4rem;
 `;
 export const Content = styled.div`
   background-color: #282c34;
