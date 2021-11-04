@@ -1,20 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 
 import {
   Container,
   Header,
-  LeadList,
   Item,
   LeadsContainer,
-  Lead,
 } from "./styles";
-
-import {
-  loadLeadFromLocalStorage,
-  saveLeadToLocalStorage,
-} from "../../services/localStorage";
+import DroppableList from "./DroppableList";
+import { AppContext } from "../../provider";
 
 const status = [
   "Cliente em Potencial",
@@ -23,32 +18,24 @@ const status = [
 ];
 
 const ListaLeads = () => {
-  const [leads, setLeads] = useState([]);
+  let {leads} = useContext(AppContext);
+  let {updateStatusLeads} = useContext(AppContext);
   const [clientePotencial, setClientePotencial] = useState([]);
   const [dadosConfirmados, setDadosConfirmados] = useState([]);
   const [reuniao, setReuniao] = useState([]);
 
   useEffect(() => {
-    const leads = loadLeadFromLocalStorage();
-    if(!leads) {
-      return;
-    }
-    setLeads(leads);
-    setClientePotencial(leads.filter((lead) => lead.status === "cliente_em_potencial"));
-    setDadosConfirmados(leads.filter((lead) => lead.status === "dados_confirmados"));
-    setReuniao(leads.filter((lead) => lead.status === "reuniao_agendada"));
-  },[leads]);
+    updateStates(leads);
+  }, [leads]);
 
-  function updateStatusLeads(oldLead, NewStatus) {
-    var oldLeads = leads;
-    let newLeads = oldLeads.map((lead) => {
-      if (lead.nome === oldLead) {
-        lead.status = NewStatus;
-      }
-      return lead;
-    });
-    setLeads(newLeads);
-    saveLeadToLocalStorage(newLeads);
+  function updateStates(leads) {
+    setClientePotencial(
+      leads.filter((lead) => lead.status === "cliente_em_potencial")
+    );
+    setDadosConfirmados(
+      leads.filter((lead) => lead.status === "dados_confirmados")
+    );
+    setReuniao(leads.filter((lead) => lead.status === "reuniao_agendada"));
   }
 
   const onEnd = (result) => {
@@ -56,11 +43,15 @@ const ListaLeads = () => {
     if (!destination) {
       return;
     }
+
     if (
       source.droppableId === "cliente_em_potencial" &&
       destination.droppableId === "dados_confirmados"
     ) {
-      updateStatusLeads(clientePotencial[source.index].nome, "dados_confirmados");
+      updateStatusLeads(
+        clientePotencial[source.index].nome,
+        "dados_confirmados"
+      );
       return;
     }
 
@@ -68,7 +59,10 @@ const ListaLeads = () => {
       source.droppableId === "dados_confirmados" &&
       destination.droppableId === "reuniao_agendada"
     ) {
-      updateStatusLeads(dadosConfirmados[source.index].nome, "reuniao_agendada");
+      updateStatusLeads(
+        dadosConfirmados[source.index].nome,
+        "reuniao_agendada"
+      );
       return;
     }
   };
@@ -82,84 +76,18 @@ const ListaLeads = () => {
       </Header>
       <LeadsContainer>
         <DragDropContext onDragEnd={onEnd}>
-          <Droppable droppableId="cliente_em_potencial">
-            {(provided) => (
-              <LeadList ref={provided.innerRef} {...provided.droppableProps}>
-                {clientePotencial.map((lead, index) => {
-                  return (
-                    <Draggable
-                      key={lead.nome + index}
-                      draggableId={lead.nome + index}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <Lead
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          {lead.nome}
-                        </Lead>
-                      )}
-                    </Draggable>
-                  );
-                })}
-                {provided.placeholder}
-              </LeadList>
-            )}
-          </Droppable>
-          <Droppable droppableId="dados_confirmados">
-            {(provided) => (
-              <LeadList ref={provided.innerRef} {...provided.droppableProps}>
-                {dadosConfirmados.map((lead, index) => {
-                  return (
-                    <Draggable
-                      key={lead.nome + index}
-                      draggableId={lead.nome + index}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <Lead
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          {lead.nome}
-                        </Lead>
-                      )}
-                    </Draggable>
-                  );
-                })}
-                {provided.placeholder}
-              </LeadList>
-            )}
-          </Droppable>
-          <Droppable droppableId="reuniao_agendada">
-            {(provided) => (
-              <LeadList ref={provided.innerRef} {...provided.droppableProps}>
-                {reuniao.map((lead, index) => {
-                  return (
-                    <Draggable
-                      key={lead.nome + index}
-                      draggableId={lead.nome + index}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <Lead
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          {lead.nome}
-                        </Lead>
-                      )}
-                    </Draggable>
-                  );
-                })}
-                {provided.placeholder}
-              </LeadList>
-            )}
-          </Droppable>
+          <DroppableList
+            leads={clientePotencial}
+            droppableId="cliente_em_potencial"
+          />
+          <DroppableList
+            leads={dadosConfirmados}
+            droppableId="dados_confirmados"
+          />
+          <DroppableList 
+            leads={reuniao}  
+            droppableId="reuniao_agendada" 
+          />
         </DragDropContext>
       </LeadsContainer>
     </Container>

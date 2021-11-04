@@ -1,9 +1,11 @@
-import React from "react";
+import React,{useContext} from "react";
 
 import Input from "../UI/Input";
 import { Form, LabelErro, Main, ButtonCadastroUser} from "./styles"
 
-const CadastroUser = ({addUser, toggleModalUser}) => {
+import {AppContext} from "../../provider";
+
+const CadastroUser = ({toggleModalUser}) => {
   //States--------------------------------------------------------------------------------------------------
   const [inputUsuario, setInputUsuario] = React.useState("");
   const [senha, setSenha] = React.useState("");
@@ -13,6 +15,7 @@ const CadastroUser = ({addUser, toggleModalUser}) => {
     password: false,
     confirmedPassword: false,
   });
+  const {addUser} = useContext(AppContext);
 
   //Funções-------------------------------------------------------------------------------------------------
 

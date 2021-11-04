@@ -1,10 +1,4 @@
-import { useEffect, useState, React } from "react";
-import {
-  saveLeadToLocalStorage,
-  saveUserToLocalStorage,
-  loadLeadFromLocalStorage,
-  loadUserFromLocalStorage,
-} from "../../services/localStorage";
+import { useState, React } from "react";
 
 import Button from "../../components/UI/Button";
 import CadastroLead from "../../components/CadastroLead";
@@ -18,21 +12,6 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalUser, setModalUser] = useState(false);
   const [modalLead, setModalLead] = useState(false);
-
-  //Estado dos leads e usuários
-  const [leads, setLeads] = useState([]);
-  const [users, setUsers] = useState([]);
-  //Carregando valores do local storage
-  useEffect(() => {
-    var LocalUsers = loadUserFromLocalStorage();
-    var LocalLeads = loadLeadFromLocalStorage();
-    if (LocalUsers) {
-      setUsers(LocalUsers);
-    }
-    if (LocalLeads) {
-      setLeads(LocalLeads);
-    }
-  }, []);
 
   //Abre/fecha modal de cadastro de lead
   const toggleModalLead = () => {
@@ -53,47 +32,16 @@ const Dashboard = () => {
     setModalLead(false);
   };
 
-  //adiciona lead
-  const addLead = (lead) => {
-    //Adicionando status de lead
-    lead.status = "cliente_em_potencial";
-
-    //array de leads
-    var Arrayleads = leads;
-
-    //adicionando lead
-    Arrayleads.push(lead);
-
-    setLeads(leads);
-    saveLeadToLocalStorage(leads);
-    console.log(leads);
-  };
-
-  //adiciona usuário
-  const addUser = (user) => {
-    //array de usuários
-    var arrayUsers = users;
-
-    //adicionando usuário
-    arrayUsers.push(user);
-
-    setUsers(users);
-    saveUserToLocalStorage(users);
-    console.log(users);
-  };
-
   return (
     <Wrapper>
       <Modal isOpen={showModal} onClose={closeModal}>
         {modalLead && (
           <CadastroLead
-            addLead={addLead.bind(this)}
             toggleModalLead={toggleModalLead.bind(this)}
           />
         )}
         {modalUser && (
           <CadastroUser
-            addUser={addUser.bind(this)}
             toggleModalUser={toggleModalUser.bind(this)}
           />
         )}
@@ -114,8 +62,7 @@ const Dashboard = () => {
           Novo Usuário
         </Button>
       </Buttons>
-      <LeadsList/>
-      {leads.length === 0 && <h2>Nenhuma lead cadastrada</h2>}
+      <LeadsList />
     </Wrapper>
   );
 };

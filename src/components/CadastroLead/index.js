@@ -7,8 +7,10 @@ import {
   CheckboxTable,
   ButtonLead,
 } from "./styles";
+import {AppContext} from '../../provider';
 
-const CadastroLead = ({ addLead, toggleModalLead }) => {
+const CadastroLead = ({ toggleModalLead }) => {
+  const {addLead} = React.useContext(AppContext);
   //Objeto que será enviado para o backend
   const [lead, setLead] = React.useState({
     nome: "",
